@@ -1,10 +1,28 @@
-import React from "react";
+import { FormEvent, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import CreatableReactSelect from "react-select/creatable";
+import { NoteData, Tag } from "../types";
 
-function Form() {
+interface IFormProps {
+  onSubmit: (data: NoteData) => void;
+}
+
+function Form({ onSubmit }: IFormProps) {
+  const titleRef = useRef<HTMLInputElement>(null);
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    onSubmit({
+      title: titleRef.current!.value,
+      body: textAreaRef.current!.value,
+      tags: [],
+    });
+  };
+
   return (
-    <form className="bg-white px-8 py-8">
+    <form className="bg-white px-8 py-8" onSubmit={handleSubmit}>
       <div className="flex">
         <div className="mb-4 w-full mr-3">
           <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -14,6 +32,7 @@ function Form() {
             className="border rounded w-full pb-2 pt-1 px-3 text-gray-700"
             id="username"
             type="text"
+            ref={titleRef}
             placeholder="Username"
           />
         </div>
@@ -21,14 +40,28 @@ function Form() {
           <label className="block text-gray-700 text-sm font-bold mb-2">
             Tags
           </label>
-          <CreatableReactSelect isMulti />
+          <CreatableReactSelect
+            value={selectedTags.map((tag) => {
+              // CreateReactSelect expects the return to be like this in this format
+              return { label: tag.label, value: tag.id };
+            })}
+            // Changing back to type of tag we expect
+            onChange={(tags) =>
+              setSelectedTags(
+                tags.map((tag) => {
+                  return { label: tag.label, id: tag.value };
+                })
+              )
+            }
+            isMulti
+          />
         </div>
       </div>
       <div className="mb-4">
         <label className="block text-gray-700 text-sm font-bold mb-2">
           Body
         </label>
-        <textarea className="w-full border p-3" rows={10} />
+        <textarea ref={textAreaRef} className="w-full border p-3" rows={10} />
       </div>
       <div className="flex justify-end">
         <button

@@ -1,11 +1,15 @@
-import React from "react";
+import { NoteData } from "../types";
 import Form from "./Form";
 
-function NewNote() {
+interface INewNoteProps {
+  onSubmit: (data: NoteData) => void;
+}
+
+function NewNote({ onSubmit }: INewNoteProps) {
   return (
     <>
-      <h1 className="text-3xl">NewNote</h1>
-      <Form />
+      <h1 className="text-3xl">New Note</h1>
+      <Form onSubmit={onSubmit} />
     </>
   );
 }

@@ -20,7 +20,7 @@ function Form({ onSubmit, onAddTag, availableTags }: IFormProps) {
     onSubmit({
       title: titleRef.current!.value,
       body: textAreaRef.current!.value,
-      tags: [],
+      tags: selectedTags,
     });
   };
 

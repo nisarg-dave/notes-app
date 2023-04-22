@@ -2,12 +2,15 @@ import { FormEvent, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import CreatableReactSelect from "react-select/creatable";
 import { NoteData, Tag } from "../types";
+import { v4 as uuidV4 } from "uuid";
 
 interface IFormProps {
   onSubmit: (data: NoteData) => void;
+  onAddTag: (tag: Tag) => void;
+  availableTags: Tag[];
 }
 
-function Form({ onSubmit }: IFormProps) {
+function Form({ onSubmit, onAddTag, availableTags }: IFormProps) {
   const titleRef = useRef<HTMLInputElement>(null);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
@@ -41,11 +44,22 @@ function Form({ onSubmit }: IFormProps) {
             Tags
           </label>
           <CreatableReactSelect
+            // If provided, this will be called with the input value when a new option is created, and onChange will not be called.
+            // Label is what we type
+            onCreateOption={(label) => {
+              const newTag = { id: uuidV4(), label };
+              onAddTag(newTag);
+              setSelectedTags(() => [...selectedTags, newTag]);
+            }}
             value={selectedTags.map((tag) => {
               // CreateReactSelect expects the return to be like this in this format
               return { label: tag.label, value: tag.id };
             })}
-            // Changing back to type of tag we expect
+            // Provide the options
+            options={availableTags.map((tag) => {
+              return { label: tag.label, value: tag.id };
+            })}
+            // Changing back to type of tag we expect. It takes in the tags and returns in our format.
             onChange={(tags) =>
               setSelectedTags(
                 tags.map((tag) => {

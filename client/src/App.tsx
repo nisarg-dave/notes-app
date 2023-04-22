@@ -25,11 +25,23 @@ function App() {
       ];
     });
   };
+  const addTag = (tag: Tag) => {
+    setTags(() => [...tags, tag]);
+  };
   return (
     <div className="m-4">
       <Routes>
         <Route path="/" element={<h1 className="text-3xl">Hello</h1>} />
-        <Route path="/new" element={<NewNote onSubmit={createNote} />} />
+        <Route
+          path="/new"
+          element={
+            <NewNote
+              onSubmit={createNote}
+              onAddTag={addTag}
+              availableTags={tags}
+            />
+          }
+        />
         <Route path="/:id">
           <Route index element={<h1>Show</h1>} />
           <Route path="edit" element={<h1>Edit</h1>} />

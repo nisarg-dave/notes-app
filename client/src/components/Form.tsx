@@ -1,5 +1,5 @@
 import { FormEvent, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CreatableReactSelect from "react-select/creatable";
 import { NoteData, Tag } from "../types";
 import { v4 as uuidV4 } from "uuid";
@@ -14,6 +14,7 @@ function Form({ onSubmit, onAddTag, availableTags }: IFormProps) {
   const titleRef = useRef<HTMLInputElement>(null);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+  const navigate = useNavigate();
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -22,6 +23,8 @@ function Form({ onSubmit, onAddTag, availableTags }: IFormProps) {
       body: textAreaRef.current!.value,
       tags: selectedTags,
     });
+
+    navigate("..");
   };
 
   return (
@@ -33,10 +36,10 @@ function Form({ onSubmit, onAddTag, availableTags }: IFormProps) {
           </label>
           <input
             className="border rounded w-full pb-2 pt-1 px-3 text-gray-700"
-            id="username"
+            id="title"
             type="text"
             ref={titleRef}
-            placeholder="Username"
+            placeholder="Title"
           />
         </div>
         <div className="mb-4 w-full">

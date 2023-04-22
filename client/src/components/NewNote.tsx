@@ -10,7 +10,7 @@ interface INewNoteProps {
 function NewNote({ onSubmit, onAddTag, availableTags }: INewNoteProps) {
   return (
     <>
-      <h1 className="text-3xl">New Note</h1>
+      <h1 className="text-3xl ml-8">New Note</h1>
       <Form
         onSubmit={onSubmit}
         onAddTag={onAddTag}

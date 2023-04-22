@@ -3,6 +3,7 @@ import NewNote from "./components/NewNote";
 import { useMemo, useState } from "react";
 import { NoteData, RawNote, Tag } from "./types";
 import { v4 as uuidV4 } from "uuid";
+import NoteList from "./components/NoteList";
 
 function App() {
   const [notes, setNotes] = useState<RawNote[]>([]);
@@ -31,7 +32,10 @@ function App() {
   return (
     <div className="m-4">
       <Routes>
-        <Route path="/" element={<h1 className="text-3xl">Hello</h1>} />
+        <Route
+          path="/"
+          element={<NoteList availableTags={tags} notes={notesWithTags} />}
+        />
         <Route
           path="/new"
           element={
@@ -43,7 +47,6 @@ function App() {
           }
         />
         <Route path="/:id">
-          <Route index element={<h1>Show</h1>} />
           <Route path="edit" element={<h1>Edit</h1>} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />

@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import ReactSelect from "react-select";
-import { Note, RawNote, Tag } from "../types";
+import { Note, Tag } from "../types";
 import NoteCard from "./NoteCard";
 
 interface INoteListProps {
@@ -32,7 +32,7 @@ function NoteList({ availableTags, notes }: INoteListProps) {
     <div className="mx-8">
       <div className="flex justify-between">
         <h1 className="text-3xl">Notes</h1>
-        <div className="flex ">
+        <div>
           <Link to="/new">
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"

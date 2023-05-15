@@ -1,31 +1,17 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import NewNote from "./components/NewNote";
-import { useMemo, useState } from "react";
-import { NoteData, RawNote, Tag } from "./types";
+import { useState } from "react";
+import { NoteData, Note, Tag } from "./types";
 import { v4 as uuidV4 } from "uuid";
 import NoteList from "./components/NoteList";
 import EditNote from "./components/EditNote";
 
 function App() {
-  const [notes, setNotes] = useState<RawNote[]>([]);
+  const [notes, setNotes] = useState<Note[]>([]);
   const [tags, setTags] = useState<Tag[]>([]);
 
-  const notesWithTags = useMemo(() => {
-    return notes.map((note) => {
-      return {
-        ...note,
-        tags: tags.filter((tag) => note.tagIds.includes(tag.id)),
-      };
-    });
-  }, [notes, tags]);
-
-  const createNote = ({ tags, ...data }: NoteData) => {
-    setNotes(() => {
-      return [
-        ...notes,
-        { ...data, id: uuidV4(), tagIds: tags.map((tag) => tag.id) },
-      ];
-    });
+  const createNote = ({ title, body, tags }: NoteData): void => {
+    setNotes(() => [...notes, { id: uuidV4(), title, body, tags }]);
   };
   const addTag = (tag: Tag) => {
     setTags(() => [...tags, tag]);
@@ -35,7 +21,7 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={<NoteList availableTags={tags} notes={notesWithTags} />}
+          element={<NoteList availableTags={tags} notes={notes} />}
         />
         <Route
           path="/new"
@@ -48,7 +34,7 @@ function App() {
           }
         />
         <Route path="/:id">
-          <Route path="edit" element={<EditNote notes={notesWithTags} />} />
+          <Route path="edit" element={<EditNote notes={notes} />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

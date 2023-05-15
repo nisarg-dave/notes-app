@@ -12,13 +12,3 @@ export type NoteData = {
 export type Note = {
   id: string;
 } & NoteData;
-
-export type RawNoteData = {
-  title: string;
-  body: string;
-  tagIds: string[];
-};
-
-export type RawNote = {
-  id: string;
-} & RawNoteData;

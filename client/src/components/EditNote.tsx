@@ -1,15 +1,31 @@
-import { Note } from "../types";
-import { Link, useParams } from "react-router-dom";
+import { Note, Tag } from "../types";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import CreatableReactSelect from "react-select/creatable";
+import { FormEvent, useState } from "react";
 
 interface IEditNoteProps {
   notes: Note[];
+  onSubmit: (data: Note) => void;
 }
 
-function EditNote({ notes }: IEditNoteProps) {
-  const { id } = useParams();
+function EditNote({ notes, onSubmit }: IEditNoteProps) {
+  const paramObject = useParams();
+  let id: string;
+  id = paramObject.id!;
+  // This may not persit and will need to change to state
+  let currentNote: Note;
+  currentNote = notes.find((note) => note.id === id)!;
 
-  const currentNote = notes.find((note) => note.id === id);
+  const [title, setTitle] = useState<string>(currentNote.title);
+  const [body, setBody] = useState<string>(currentNote.body);
+  const [tags, setTags] = useState<Tag[]>(currentNote.tags);
+
+  const navigate = useNavigate();
+
+  const handleSubmit = () => {
+    onSubmit({ id, title, body, tags });
+    navigate("../..");
+  };
 
   return (
     <div className="mx-8">
@@ -24,8 +40,9 @@ function EditNote({ notes }: IEditNoteProps) {
               className="border rounded w-full pb-2 pt-1 px-3 text-gray-700"
               id="title"
               type="text"
-              value={currentNote?.title}
               placeholder="Title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
             />
           </div>
           <div className="mb-4 w-full">
@@ -40,12 +57,12 @@ function EditNote({ notes }: IEditNoteProps) {
               //   onAddTag(newTag);
               //   setSelectedTags(() => [...selectedTags, newTag]);
               // }}
-              value={currentNote?.tags.map((tag) => {
+              value={tags.map((tag) => {
                 // CreateReactSelect expects the return to be like this in this format
                 return { label: tag.label, value: tag.id };
               })}
               // Provide the options
-              options={currentNote?.tags.map((tag) => {
+              options={tags.map((tag) => {
                 return { label: tag.label, value: tag.id };
               })}
               // Changing back to type of tag we expect. It takes in the tags and returns in our format.
@@ -65,19 +82,21 @@ function EditNote({ notes }: IEditNoteProps) {
             Body
           </label>
           <textarea
-            value={currentNote?.body}
+            value={body}
             className="w-full border p-3"
             rows={10}
+            onChange={(e) => setBody(e.target.value)}
           />
         </div>
         <div className="flex justify-end">
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
             type="submit"
+            onClick={handleSubmit}
           >
             Save
           </button>
-          <Link to="/">
+          <Link to="../..">
             <button
               className="bg-gray-100 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded"
               type="button"

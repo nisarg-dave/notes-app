@@ -16,7 +16,7 @@ function Form({ onSubmit, onAddTag, availableTags }: IFormProps) {
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
   const navigate = useNavigate();
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = (e: FormEvent): void => {
     e.preventDefault();
     onSubmit({
       title: titleRef.current!.value,

@@ -19,8 +19,11 @@ function App() {
 
   const updateNote = ({ id, title, body, tags }: Note): void => {
     const restOfNotes = notes.filter((note) => note.id !== id);
-
     setNotes(() => [...restOfNotes, { id, title, body, tags }]);
+  };
+
+  const deleteNote = (id: string): void => {
+    setNotes(notes.filter((note) => note.id !== id));
   };
   return (
     <div className="m-4">
@@ -42,7 +45,15 @@ function App() {
         <Route path="/:id">
           <Route
             path="edit"
-            element={<EditNote notes={notes} onSubmit={updateNote} />}
+            element={
+              <EditNote
+                notes={notes}
+                onSubmit={updateNote}
+                onDelete={deleteNote}
+                onAddTag={addTag}
+                availableTags={tags}
+              />
+            }
           />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />

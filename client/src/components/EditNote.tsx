@@ -1,14 +1,24 @@
 import { Note, Tag } from "../types";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import CreatableReactSelect from "react-select/creatable";
-import { FormEvent, useState } from "react";
+import { useState } from "react";
+import { v4 as uuidV4 } from "uuid";
 
 interface IEditNoteProps {
   notes: Note[];
   onSubmit: (data: Note) => void;
+  onDelete: (id: string) => void;
+  onAddTag: (tag: Tag) => void;
+  availableTags: Tag[];
 }
 
-function EditNote({ notes, onSubmit }: IEditNoteProps) {
+function EditNote({
+  notes,
+  onSubmit,
+  onDelete,
+  onAddTag,
+  availableTags,
+}: IEditNoteProps) {
   const paramObject = useParams();
   let id: string;
   id = paramObject.id!;
@@ -22,8 +32,13 @@ function EditNote({ notes, onSubmit }: IEditNoteProps) {
 
   const navigate = useNavigate();
 
-  const handleSubmit = () => {
+  const handleSave = () => {
     onSubmit({ id, title, body, tags });
+    navigate("../..");
+  };
+
+  const handleDelete = () => {
+    onDelete(id);
     navigate("../..");
   };
 
@@ -52,27 +67,27 @@ function EditNote({ notes, onSubmit }: IEditNoteProps) {
             <CreatableReactSelect
               // If provided, this will be called with the input value when a new option is created, and onChange will not be called.
               // Label is what we type
-              // onCreateOption={(label) => {
-              //   const newTag = { id: uuidV4(), label };
-              //   onAddTag(newTag);
-              //   setSelectedTags(() => [...selectedTags, newTag]);
-              // }}
+              onCreateOption={(label) => {
+                const newTag = { id: uuidV4(), label };
+                onAddTag(newTag);
+                setTags(() => [...tags, newTag]);
+              }}
               value={tags.map((tag) => {
                 // CreateReactSelect expects the return to be like this in this format
                 return { label: tag.label, value: tag.id };
               })}
               // Provide the options
-              options={tags.map((tag) => {
+              options={availableTags.map((tag) => {
                 return { label: tag.label, value: tag.id };
               })}
               // Changing back to type of tag we expect. It takes in the tags and returns in our format.
-              // onChange={(tags) =>
-              //   setSelectedTags(
-              //     tags.map((tag) => {
-              //       return { label: tag.label, id: tag.value };
-              //     })
-              //   )
-              // }
+              onChange={(tags) =>
+                setTags(
+                  tags.map((tag) => {
+                    return { label: tag.label, id: tag.value };
+                  })
+                )
+              }
               isMulti
             />
           </div>
@@ -88,22 +103,31 @@ function EditNote({ notes, onSubmit }: IEditNoteProps) {
             onChange={(e) => setBody(e.target.value)}
           />
         </div>
-        <div className="flex justify-end">
+        <div className="flex justify-between">
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
+            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-2"
             type="submit"
-            onClick={handleSubmit}
+            onClick={handleDelete}
           >
-            Save
+            Delete
           </button>
-          <Link to="../..">
+          <div>
             <button
-              className="bg-gray-100 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded"
-              type="button"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
+              type="submit"
+              onClick={handleSave}
             >
-              Cancel
+              Save
             </button>
-          </Link>
+            <Link to="../..">
+              <button
+                className="bg-gray-100 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded"
+                type="button"
+              >
+                Cancel
+              </button>
+            </Link>
+          </div>
         </div>
       </form>
     </div>

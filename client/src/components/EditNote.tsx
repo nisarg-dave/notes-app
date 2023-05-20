@@ -1,7 +1,7 @@
 import { Note, Tag } from "../types";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import CreatableReactSelect from "react-select/creatable";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { v4 as uuidV4 } from "uuid";
 
 interface IEditNoteProps {
@@ -32,7 +32,8 @@ function EditNote({
 
   const navigate = useNavigate();
 
-  const handleSave = () => {
+  const handleSave = (e: FormEvent) => {
+    e.preventDefault();
     onSubmit({ id, title, body, tags });
     navigate("../..");
   };
@@ -45,7 +46,7 @@ function EditNote({
   return (
     <div className="mx-8">
       <h1 className="text-3xl">Edit Note</h1>
-      <form className="bg-white py-8">
+      <form className="bg-white py-8" onSubmit={handleSave}>
         <div className="flex">
           <div className="mb-4 w-full mr-3">
             <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -105,8 +106,8 @@ function EditNote({
         </div>
         <div className="flex justify-between">
           <button
-            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-2"
-            type="submit"
+            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+            type="button"
             onClick={handleDelete}
           >
             Delete
@@ -114,8 +115,7 @@ function EditNote({
           <div>
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
-              type="button"
-              onClick={handleSave}
+              type="submit"
             >
               Save
             </button>

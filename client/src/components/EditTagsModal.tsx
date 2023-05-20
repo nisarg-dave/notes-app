@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Tag } from "../types";
 
 interface IEditTagsModalProps {
@@ -14,7 +13,6 @@ function EditTagsModal({
   deleteTag,
   showModal,
 }: IEditTagsModalProps) {
-  const [newLabel, setNewLabel] = useState<string>();
   return (
     <div className="flex min-h-full items-center justify-center p-4 text-center">
       <div className="bg-white px-4 pb-4 pt-5 w-96">

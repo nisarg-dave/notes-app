@@ -25,12 +25,44 @@ function App() {
   const deleteNote = (id: string): void => {
     setNotes(notes.filter((note) => note.id !== id));
   };
+
+  const updateTag = (id: string, label: string): void => {
+    // Find the index
+    const indexOfTag = tags.findIndex((tag) => tag.id === id);
+    // Create a new array of the tags so that we don't mutate state directly
+    const allTags = [...tags];
+    // Replace the tag
+    allTags[indexOfTag] = { id, label };
+    setTags(allTags);
+    // Need to update the same tag in the notes
+    notes.forEach((note) => {
+      const indexOfTagInNote = note.tags.findIndex((tag) => tag.id === id);
+      const tagsInNote = [...note.tags];
+      tagsInNote[indexOfTagInNote] = { id, label };
+      note.tags = tagsInNote;
+    });
+  };
+
+  const deleteTag = (id: string): void => {
+    setTags(tags.filter((tag) => tag.id !== id));
+    // Need to delete tag in notes
+    notes.forEach((note) => {
+      note.tags = note.tags.filter((tag) => tag.id !== id);
+    });
+  };
   return (
     <div className="m-4">
       <Routes>
         <Route
           path="/"
-          element={<NoteList availableTags={tags} notes={notes} />}
+          element={
+            <NoteList
+              availableTags={tags}
+              notes={notes}
+              updateTag={updateTag}
+              deleteTag={deleteTag}
+            />
+          }
         />
         <Route
           path="/new"

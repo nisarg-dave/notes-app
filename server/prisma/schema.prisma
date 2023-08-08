@@ -1,6 +1,7 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+// Tells Prisma that we want to generate the Prisma client
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,4 +9,22 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+// @default means the default value is autoincremented 
+// relation takes two fields, field in Tag model that matches field in Note model. noteId is the foreign key. 
+model Tag {
+  id     Int     @id @default(autoincrement())
+  label  String  @unique
+  noteId Int
+  note   Note    @relation(fields: [noteId], references: [id])
+}
+
+// Needed to define relation in Tag model in order to know how to get to a Tag from an individual Note
+// One to many relationship. One note can have many tags
+model Note {
+  id        Int     @id @default(autoincrement())
+  title     String
+  body      String
+  tags      Tag[]   
 }

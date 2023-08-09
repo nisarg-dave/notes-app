@@ -1,4 +1,5 @@
 import { builder } from "../builder";
+import { prisma } from "../db";
 
 // This looks redundant as Prisma schema is already defined.
 // However, defines the shape of the data in the database, while the GraphQL schema defines the data available in the API.
@@ -10,7 +11,18 @@ builder.prismaObject("Note", {
   fields: (t) => ({
     id: t.exposeID("id"),
     title: t.exposeString("title"),
-    body: t.exposeString("title"),
+    body: t.exposeString("body"),
     tags: t.relation("tags"),
   }),
 });
+
+builder.queryField("notes", (t) =>
+  t.prismaField({
+    // Defines a fields that resolves to array Note type
+    type: ["Note"],
+    // Resolve function to resolve the query. The query paramter is populated and built for us by Pothos
+    resolve: async (query, root, args, ctx, info) => {
+      return prisma.note.findMany({ ...query });
+    },
+  })
+);

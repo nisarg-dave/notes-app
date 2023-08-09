@@ -13,3 +13,5 @@ export const builder = new SchemaBuilder<{ PrismaTypes: PrismaTypes }>({
 });
 
 // This is the code-first approach as pothos gives you helper functions to generate GraphQl schemas
+
+builder.queryType({});

@@ -1,4 +1,5 @@
 import { builder } from "../builder";
+import { prisma } from "../db";
 
 builder.prismaObject("Tag", {
   fields: (t) => ({
@@ -6,3 +7,14 @@ builder.prismaObject("Tag", {
     label: t.exposeString("label"),
   }),
 });
+
+builder.queryField("tags", (t) =>
+  t.prismaField({
+    // Defines a fields that resolves to array Note type
+    type: ["Tag"],
+    // Resolve function to resolve the query. The query paramter is populated and built for us by Pothos
+    resolve: async (query, root, args, ctx, info) => {
+      return prisma.tag.findMany({ ...query });
+    },
+  })
+);

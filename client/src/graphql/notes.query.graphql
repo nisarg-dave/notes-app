@@ -1,0 +1,12 @@
+# Need queries for codegen to generate types
+query GetNotes {
+  notes {
+    id
+    title
+    body
+    tags {
+      id
+      label
+    }
+  }
+}

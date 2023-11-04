@@ -21,10 +21,10 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
+    "@apollo/server": "^4.9.5",
     "@pothos/core": "^3.32.1",
     "@pothos/plugin-prisma": "^3.56.1",
     "@prisma/client": "^5.1.1",
-    "graphql": "^16.7.1",
-    "graphql-yoga": "^4.0.3"
+    "graphql": "^16.7.1"
   }
 }

@@ -1,15 +1,18 @@
-import { createServer } from "node:http";
-import { createYoga } from "graphql-yoga";
+import { ApolloServer } from "@apollo/server";
+import { startStandaloneServer } from "@apollo/server/standalone";
 import { schema } from "./schema";
 
-const port = Number(process.env.API_PORT) || 4000;
+(async () => {
+  const port = Number(process.env.API_PORT) || 4000;
 
-const yoga = createYoga({
-  schema: schema,
-});
+  const server = new ApolloServer({
+    schema,
+  });
 
-const server = createServer(yoga);
+  // const serverUrl = async () => {
+  const { url } = await startStandaloneServer(server, {
+    listen: { port: 4000 },
+  });
 
-server.listen(4000, () => {
-  console.log(`🚀 GraphQL Server ready at http://localhost:${port}/graphql`);
-});
+  console.log(`🚀  Server ready at: ${url}`);
+})();

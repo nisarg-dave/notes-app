@@ -2,9 +2,9 @@ import { prisma } from "../src/db";
 
 async function main() {
   // Delete all `Note` and `Tag` records
+  // Seems like you can't do nested creates with createMany
   await prisma.note.deleteMany({});
   await prisma.tag.deleteMany({});
-  // (Re-)Create dummy `User` and `Message` records
   await prisma.note.create({
     data: {
       title: "Homework Tasks",
@@ -40,11 +40,11 @@ async function main() {
   await prisma.note.create({
     data: {
       title: "Games to play",
-      body: "Finish Hogwarts Legacy. Try EAFC 24.",
+      body: "Finish Spiderman 2. Try EAFC 24.",
       tags: {
         create: [
           {
-            label: "Xbox",
+            label: "PS5",
           },
           {
             label: "Video Games",
@@ -54,4 +54,12 @@ async function main() {
     },
   });
 }
-main();
+
+main()
+  .then(async () => {
+    await prisma.$disconnect();
+  })
+  .catch(async (e) => {
+    console.error(e);
+    await prisma.$disconnect();
+  });

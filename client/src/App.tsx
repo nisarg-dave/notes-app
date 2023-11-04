@@ -5,10 +5,20 @@ import { NoteData, Note, Tag } from "./types";
 import { v4 as uuidV4 } from "uuid";
 import NoteList from "./components/NoteList";
 import EditNote from "./components/EditNote";
+import { useQuery } from "urql";
+import { GetNotesDocument } from "./graphql/generated";
 
 function App() {
-  const [notes, setNotes] = useState<Note[]>([]);
-  const [tags, setTags] = useState<Tag[]>([]);
+  const [results] = useQuery({
+    query: GetNotesDocument,
+  });
+  const notesArr = results.data?.notes.map((note) => note);
+  const tagsArr = notesArr?.forEach((note) => {
+    return note.tags.map((tag) => tag);
+  });
+  console.log(results);
+  const [notes, setNotes] = useState<Note[]>(notesArr!);
+  const [tags, setTags] = useState<Tag[]>(tagsArr!);
 
   const createNote = ({ title, body, tags }: NoteData): void => {
     setNotes(() => [...notes, { id: uuidV4(), title, body, tags }]);

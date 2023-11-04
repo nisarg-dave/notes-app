@@ -23,7 +23,7 @@ function NoteList({
   const [showEditTagsModal, setShowEditTagsModal] = useState(false);
 
   const filteredNotes = useMemo(() => {
-    return notes.filter((note) => {
+    return notes?.filter((note) => {
       return (
         (title === "" ||
           note.title.toLowerCase().includes(title.toLowerCase())) &&
@@ -91,7 +91,7 @@ function NoteList({
                 return { label: tag.label, value: tag.id };
               })}
               // Provide the options
-              options={availableTags.map((tag) => {
+              options={availableTags?.map((tag) => {
                 return { label: tag.label, value: tag.id };
               })}
               // Changing back to type of tag we expect. It takes in the tags and returns in our format.
@@ -108,7 +108,7 @@ function NoteList({
         </div>
       </div>
       <div className="grid grid-cols-1 p-6 sm:grid-cols-2 sm:p-6 md:grid-cols-3 md:p-4 gap-4">
-        {filteredNotes.map((note) => {
+        {filteredNotes?.map((note) => {
           return (
             <NoteCard
               key={note.id}

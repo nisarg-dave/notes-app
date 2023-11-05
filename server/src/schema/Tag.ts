@@ -24,3 +24,23 @@ export const NewTagInput = builder.inputType("NewTagInput", {
     label: t.string({ required: true }),
   }),
 });
+
+// builder.mutationFields((t) => {
+//   createTag: t.prismaField({
+//     type: "Tag",
+//     args: {
+//       tag: t.arg({
+//         type: NewTagInput,
+//         required: true,
+//       }),
+//     },
+//     resolve: (query, parent, args) => {
+//       return prisma.tag.create({
+//         ...query,
+//         data: {
+//           label: args.tag.label,
+//         },
+//       });
+//     },
+//   });
+// });

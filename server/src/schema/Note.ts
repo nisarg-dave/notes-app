@@ -56,9 +56,45 @@ const NewNoteInput = builder.inputType("NewNoteInput", {
   }),
 });
 
+// input EditNoteInput{
+//   title: String!
+//   body: String!
+// }
+const EditNoteInput = builder.inputType("EditNoteInput", {
+  fields: (t) => ({
+    title: t.string({ required: true }),
+    body: t.string({ required: true }),
+  }),
+});
+
 // Same as saying
 // type Mutation {
 //   createNote(note: NewNoteInput!): Note
+//   editNote(id: Int!, note: EditNoteInput!): Note
+// }
+// Example mutation
+// mutation CreateNoteMutation($note: NewNoteInput!,){
+//   createNote(note: $note) {
+//     id,
+//     title,
+//     body,
+//     tags {
+//       id,
+//       label,
+//     }
+//   }
+// }
+// Another example mutation
+// mutation EditNoteMutation($note: EditNoteInput!, $id: Int!){
+//   editNote(id: $id, note: $note) {
+//     id
+//     title
+//     body
+//     tags {
+//       id
+//       label
+//     }
+//   }
 // }
 builder.mutationFields((t) => ({
   createNote: t.prismaField({
@@ -80,6 +116,28 @@ builder.mutationFields((t) => ({
               label: tag.label,
             })),
           },
+        },
+      });
+    },
+  }),
+  editNote: t.prismaField({
+    type: "Note",
+    args: {
+      id: t.arg.int({ required: true }),
+      note: t.arg({
+        type: EditNoteInput,
+        required: true,
+      }),
+    },
+    resolve: (query, parent, args) => {
+      return prisma.note.update({
+        ...query,
+        where: {
+          id: args.id,
+        },
+        data: {
+          title: args.note.title,
+          body: args.note.body,
         },
       });
     },

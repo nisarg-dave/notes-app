@@ -71,7 +71,9 @@ const EditNoteInput = builder.inputType("EditNoteInput", {
 // type Mutation {
 //   createNote(note: NewNoteInput!): Note
 //   editNote(id: Int!, note: EditNoteInput!): Note
+//   deleteNote(id:Int!): [Note]
 // }
+//
 // Example mutation
 // mutation CreateNoteMutation($note: NewNoteInput!,){
 //   createNote(note: $note) {
@@ -140,6 +142,20 @@ builder.mutationFields((t) => ({
           body: args.note.body,
         },
       });
+    },
+  }),
+  deleteNote: t.prismaField({
+    type: ["Note"],
+    args: {
+      id: t.arg.int({ required: true }),
+    },
+    resolve: (query, parent, args) => {
+      prisma.note.delete({
+        where: {
+          id: args.id,
+        },
+      });
+      return prisma.note.findMany();
     },
   }),
 }));

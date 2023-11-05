@@ -18,3 +18,9 @@ builder.queryField("tags", (t) =>
     },
   })
 );
+
+export const NewTagInput = builder.inputType("NewTagInput", {
+  fields: (t) => ({
+    label: t.string({ required: true }),
+  }),
+});

@@ -1,6 +1,6 @@
 import { builder } from "./builder";
-import "./models/Note";
-import "./models/Tag";
+import "./schema/Note";
+import "./schema/Tag";
 
 export const schema = builder.toSchema({});
 

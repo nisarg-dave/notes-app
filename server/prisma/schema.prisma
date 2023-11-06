@@ -34,6 +34,7 @@ model Note {
 model Tag {
   id     Int    @id @default(autoincrement())
   label  String @unique
-  note   Note   @relation(fields: [noteId], references: [id])
-  noteId Int
+  // Made these fields optional to allow for onDelete: Set Null, so when Note is delete, noteid set to null
+  note   Note?  @relation(fields: [noteId], references: [id], onDelete: SetNull)
+  noteId Int?
 }

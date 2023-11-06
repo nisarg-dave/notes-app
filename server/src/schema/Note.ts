@@ -37,7 +37,7 @@ builder.queryFields((t) => ({
     // Resolve function to resolve the query. The query paramter is populated and built for us by Pothos
     resolve: async (query, root, args, ctx, info) => {
       // query basically has the include and select fields
-      return prisma.note.findMany({ ...query });
+      return await prisma.note.findMany({ ...query });
     },
   }),
 }));
@@ -107,8 +107,8 @@ builder.mutationFields((t) => ({
         required: true,
       }),
     },
-    resolve: (query, parent, args) => {
-      return prisma.note.create({
+    resolve: async (query, parent, args) => {
+      return await prisma.note.create({
         ...query,
         data: {
           title: args.note.title,
@@ -131,8 +131,8 @@ builder.mutationFields((t) => ({
         required: true,
       }),
     },
-    resolve: (query, parent, args) => {
-      return prisma.note.update({
+    resolve: async (query, parent, args) => {
+      return await prisma.note.update({
         ...query,
         where: {
           id: args.id,
@@ -149,13 +149,25 @@ builder.mutationFields((t) => ({
     args: {
       id: t.arg.int({ required: true }),
     },
-    resolve: (query, parent, args) => {
-      prisma.note.delete({
+    resolve: async (query, parent, args) => {
+      // disconnect tag from note
+      // await prisma.note.update({
+      //   where: {
+      //     id: args.id,
+      //   },
+      //   data: {
+      //     tags: {
+      //       // Disconnecting one to many relations by setting to an empty list
+      //       set: [],
+      //     },
+      //   },
+      // });
+      await prisma.note.delete({
         where: {
           id: args.id,
         },
       });
-      return prisma.note.findMany();
+      return await prisma.note.findMany();
     },
   }),
 }));

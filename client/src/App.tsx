@@ -1,24 +1,30 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import NewNote from "./components/NewNote";
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { NoteData, Note, Tag } from "./types";
 import { v4 as uuidV4 } from "uuid";
 import NoteList from "./components/NoteList";
 import EditNote from "./components/EditNote";
-import { useQuery } from "urql";
+import { useQuery, gql } from "@apollo/client";
 import { GetNotesDocument } from "./graphql/generated";
 
 function App() {
-  const [results] = useQuery({
-    query: GetNotesDocument,
-  });
-  const notesArr = results.data?.notes.map((note) => note);
-  const tagsArr = notesArr?.forEach((note) => {
-    return note.tags.map((tag) => tag);
-  });
-  console.log(results);
-  const [notes, setNotes] = useState<Note[]>(notesArr!);
-  const [tags, setTags] = useState<Tag[]>(tagsArr!);
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [tags, setTags] = useState<Tag[]>([]);
+
+  let notesArr: Note[];
+  let tagsArr: Tag[];
+
+  const { loading, error, data } = useQuery(GetNotesDocument);
+
+  useMemo(() => {
+    notesArr = data?.notes.map((note) => note)!;
+    tagsArr = notesArr?.forEach((note) => {
+      return note.tags.map((tag) => tag);
+    })!;
+    setNotes(notesArr!);
+    setTags(tagsArr!);
+  }, [data]);
 
   const createNote = ({ title, body, tags }: NoteData): void => {
     setNotes(() => [...notes, { id: uuidV4(), title, body, tags }]);

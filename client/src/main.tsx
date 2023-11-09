@@ -3,19 +3,19 @@ import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 import { BrowserRouter as Router } from "react-router-dom";
-import { createClient, Provider } from "urql";
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 
-const client = createClient({
-  url: import.meta.env.VITE_API_URL || "http://localhost:4000/graphql",
-  exchanges: [],
+const client = new ApolloClient({
+  uri: import.meta.env.VITE_API_URL || "http://localhost:4000/graphql",
+  cache: new InMemoryCache(),
 });
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <Router>
-      <Provider value={client}>
+      <ApolloProvider client={client}>
         <App />
-      </Provider>
+      </ApolloProvider>
     </Router>
   </React.StrictMode>
 );

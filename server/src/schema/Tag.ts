@@ -69,7 +69,7 @@ builder.mutationFields((t) => ({
   editTag: t.prismaField({
     type: "Tag",
     args: {
-      id: t.arg.int({ required: true }),
+      id: t.arg.string({ required: true }),
       tag: t.arg({
         type: EditTagInput,
         required: true,
@@ -89,7 +89,7 @@ builder.mutationFields((t) => ({
   deleteTag: t.prismaField({
     type: ["Tag"],
     args: {
-      id: t.arg.int({ required: true }),
+      id: t.arg.string({ required: true }),
     },
     resolve: async (query, parent, args) => {
       await prisma.tag.delete({

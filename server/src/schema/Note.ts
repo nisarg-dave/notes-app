@@ -125,7 +125,7 @@ builder.mutationFields((t) => ({
   editNote: t.prismaField({
     type: "Note",
     args: {
-      id: t.arg.int({ required: true }),
+      id: t.arg.string({ required: true }),
       note: t.arg({
         type: EditNoteInput,
         required: true,
@@ -147,7 +147,7 @@ builder.mutationFields((t) => ({
   deleteNote: t.prismaField({
     type: ["Note"],
     args: {
-      id: t.arg.int({ required: true }),
+      id: t.arg.string({ required: true }),
     },
     resolve: async (query, parent, args) => {
       // disconnect tag from note

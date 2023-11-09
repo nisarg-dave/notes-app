@@ -21,7 +21,7 @@ datasource db {
 // Needed to define relation in Tag model in order to know how to get to a Tag from an individual Note
 // One to many relationship. One note can have many tags
 model Note {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   title     String
   body      String
   tags      Tag[]
@@ -32,9 +32,9 @@ model Note {
 // @default means the default value is autoincremented 
 // relation takes two fields, field in Tag model that matches field in Note model. noteId is the foreign key. 
 model Tag {
-  id     Int    @id @default(autoincrement())
-  label  String @unique
+  id     String  @id @default(uuid())
+  label  String  @unique
   // Made these fields optional to allow for onDelete: Set Null, so when Note is delete, noteid set to null
-  note   Note?  @relation(fields: [noteId], references: [id], onDelete: SetNull)
-  noteId Int?
+  note   Note?   @relation(fields: [noteId], references: [id], onDelete: SetNull)
+  noteId String?
 }

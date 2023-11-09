@@ -19,7 +19,7 @@ function NoteCard({ id, title, body, tags }: INoteCardProps) {
         <div className="flex">
           {tags.map((tag) => {
             return (
-              <div className="bg-blue-300 rounded-md px-3 mx-1">
+              <div key={tag.id} className="bg-blue-300 rounded-md px-3 mx-1">
                 <p className="text-sm text-center">{tag.label}</p>
               </div>
             );

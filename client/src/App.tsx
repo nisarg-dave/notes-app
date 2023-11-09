@@ -13,14 +13,14 @@ function App() {
   const [tags, setTags] = useState<Tag[]>([]);
 
   let notesArr: Note[];
-  let tagsArr: Tag[];
+  let tagsArr: Tag[] = [];
 
   const { loading, error, data } = useQuery(GetNotesDocument);
 
   useMemo(() => {
     notesArr = data?.notes.map((note) => note)!;
-    tagsArr = notesArr?.forEach((note) => {
-      return note.tags.map((tag) => tag);
+    notesArr?.forEach((note) => {
+      note.tags.map((tag) => tagsArr.push(tag));
     })!;
     setNotes(notesArr!);
     setTags(tagsArr!);

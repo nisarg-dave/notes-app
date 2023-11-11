@@ -8,6 +8,7 @@ import { useQuery, gql, useMutation } from "@apollo/client";
 import {
   GetNotesDocument,
   CreateNoteMutationDocument,
+  DeleteNoteMutationDocument,
 } from "./graphql/generated";
 
 function App() {
@@ -19,6 +20,9 @@ function App() {
 
   const { loading, error, data } = useQuery(GetNotesDocument);
   const [createNoteMutation] = useMutation(CreateNoteMutationDocument, {
+    refetchQueries: [GetNotesDocument],
+  });
+  const [deleteNoteMutation] = useMutation(DeleteNoteMutationDocument, {
     refetchQueries: [GetNotesDocument],
   });
 
@@ -46,7 +50,8 @@ function App() {
   };
 
   const deleteNote = (id: string): void => {
-    setNotes(notes.filter((note) => note.id !== id));
+    // same as doing id:id -> remember this from javascript
+    deleteNoteMutation({ variables: { id } });
   };
 
   const updateTag = (id: string, label: string): void => {

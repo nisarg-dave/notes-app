@@ -70,8 +70,8 @@ const EditNoteInput = builder.inputType("EditNoteInput", {
 // Same as saying
 // type Mutation {
 //   createNote(note: NewNoteInput!): Note
-//   editNote(id: Int!, note: EditNoteInput!): Note
-//   deleteNote(id:Int!): [Note]
+//   editNote(id: String!, note: EditNoteInput!): Note
+//   deleteNote(id:String!): [Note]
 // }
 //
 // Example mutation
@@ -87,7 +87,7 @@ const EditNoteInput = builder.inputType("EditNoteInput", {
 //   }
 // }
 // Another example mutation
-// mutation EditNoteMutation($note: EditNoteInput!, $id: Int!){
+// mutation EditNoteMutation($note: EditNoteInput!, $id: String!){
 //   editNote(id: $id, note: $note) {
 //     id
 //     title

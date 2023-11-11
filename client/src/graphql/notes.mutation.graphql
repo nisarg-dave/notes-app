@@ -9,3 +9,15 @@ mutation CreateNoteMutation($note: NewNoteInput!) {
     }
   }
 }
+
+mutation DeleteNoteMutation($id: String!) {
+  deleteNote(id: $id) {
+    id
+    title
+    body
+    tags {
+      id
+      label
+    }
+  }
+}

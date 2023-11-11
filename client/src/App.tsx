@@ -2,11 +2,13 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import NewNote from "./components/NewNote";
 import { useState, useEffect, useMemo } from "react";
 import { NoteData, Note, Tag } from "./types";
-import { v4 as uuidV4 } from "uuid";
 import NoteList from "./components/NoteList";
 import EditNote from "./components/EditNote";
-import { useQuery, gql } from "@apollo/client";
-import { GetNotesDocument } from "./graphql/generated";
+import { useQuery, gql, useMutation } from "@apollo/client";
+import {
+  GetNotesDocument,
+  CreateNoteMutationDocument,
+} from "./graphql/generated";
 
 function App() {
   const [notes, setNotes] = useState<Note[]>([]);
@@ -16,6 +18,9 @@ function App() {
   let tagsArr: Tag[] = [];
 
   const { loading, error, data } = useQuery(GetNotesDocument);
+  const [createNoteMutation] = useMutation(CreateNoteMutationDocument, {
+    refetchQueries: [GetNotesDocument],
+  });
 
   useMemo(() => {
     notesArr = data?.notes.map((note) => note)!;
@@ -27,7 +32,9 @@ function App() {
   }, [data]);
 
   const createNote = ({ title, body, tags }: NoteData): void => {
-    setNotes(() => [...notes, { id: uuidV4(), title, body, tags }]);
+    // setNotes(() => [...notes, { id: uuidV4(), title, body, tags }]);
+
+    createNoteMutation({ variables: { note: { title, body, tags } } });
   };
   const addTag = (tag: Tag): void => {
     setTags(() => [...tags, tag]);

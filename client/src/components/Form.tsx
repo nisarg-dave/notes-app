@@ -2,7 +2,6 @@ import { FormEvent, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import CreatableReactSelect from "react-select/creatable";
 import { NoteData, Tag } from "../types";
-import { v4 as uuidV4 } from "uuid";
 
 interface IFormProps {
   onSubmit: (data: NoteData) => void;

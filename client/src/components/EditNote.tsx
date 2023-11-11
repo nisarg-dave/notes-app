@@ -2,7 +2,6 @@ import { Note, Tag } from "../types";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import CreatableReactSelect from "react-select/creatable";
 import { FormEvent, useState } from "react";
-import { v4 as uuidV4 } from "uuid";
 
 interface IEditNoteProps {
   notes: Note[];

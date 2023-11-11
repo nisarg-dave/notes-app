@@ -25,10 +25,21 @@ builder.queryFields((t) => ({
   }),
 }));
 
+// input TagInput{
+//   id: String!,
+//   label: String!
+// }
+export const TagInput = builder.inputType("TagInput", {
+  fields: (t) => ({
+    id: t.string({ required: true }),
+    label: t.string({ required: true }),
+  }),
+});
+
 // input NewTagInput {
 //   label: String!
 // }
-export const NewTagInput = builder.inputType("NewTagInput", {
+const NewTagInput = builder.inputType("NewTagInput", {
   fields: (t) => ({
     label: t.string({ required: true }),
   }),

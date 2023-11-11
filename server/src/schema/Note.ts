@@ -1,6 +1,6 @@
 import { builder } from "../builder";
 import { prisma } from "../db";
-import { NewTagInput } from "./Tag";
+import { TagInput } from "./Tag";
 
 // This looks redundant as Prisma schema is already defined.
 // However, Prisma defines the shape of the data in the database, while the GraphQL schema defines the data available in the API.
@@ -52,7 +52,7 @@ const NewNoteInput = builder.inputType("NewNoteInput", {
   fields: (t) => ({
     title: t.string({ required: true }),
     body: t.string({ required: true }),
-    tags: t.field({ type: [NewTagInput] }),
+    tags: t.field({ type: [TagInput] }),
   }),
 });
 
@@ -114,7 +114,8 @@ builder.mutationFields((t) => ({
           title: args.note.title,
           body: args.note.body,
           tags: {
-            create: (args.note.tags ?? []).map((tag) => ({
+            connect: (args.note.tags ?? []).map((tag) => ({
+              id: tag.id,
               label: tag.label,
             })),
           },

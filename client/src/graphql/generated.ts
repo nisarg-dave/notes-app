@@ -68,7 +68,7 @@ export type MutationEditTagArgs = {
 
 export type NewNoteInput = {
   body: Scalars['String']['input'];
-  tags?: InputMaybe<Array<NewTagInput>>;
+  tags?: InputMaybe<Array<TagInput>>;
   title: Scalars['String']['input'];
 };
 
@@ -96,10 +96,23 @@ export type Tag = {
   label: Scalars['String']['output'];
 };
 
+export type TagInput = {
+  id: Scalars['String']['input'];
+  label: Scalars['String']['input'];
+};
+
+export type CreateNoteMutationMutationVariables = Exact<{
+  note: NewNoteInput;
+}>;
+
+
+export type CreateNoteMutationMutation = { __typename?: 'Mutation', createNote: { __typename?: 'Note', id: string, title: string, body: string, tags: Array<{ __typename?: 'Tag', id: string, label: string }> } };
+
 export type GetNotesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetNotesQuery = { __typename?: 'Query', notes: Array<{ __typename?: 'Note', id: string, title: string, body: string, tags: Array<{ __typename?: 'Tag', id: string, label: string }> }> };
 
 
+export const CreateNoteMutationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateNoteMutation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"note"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"NewNoteInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createNote"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"note"},"value":{"kind":"Variable","name":{"kind":"Name","value":"note"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"body"}},{"kind":"Field","name":{"kind":"Name","value":"tags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"label"}}]}}]}}]}}]} as unknown as DocumentNode<CreateNoteMutationMutation, CreateNoteMutationMutationVariables>;
 export const GetNotesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetNotes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"notes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"body"}},{"kind":"Field","name":{"kind":"Name","value":"tags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"label"}}]}}]}}]}}]} as unknown as DocumentNode<GetNotesQuery, GetNotesQueryVariables>;

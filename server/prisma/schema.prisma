@@ -34,7 +34,7 @@ model Note {
 model Tag {
   id     String  @id @default(uuid())
   label  String  @unique
-  // Made these fields optional to allow for onDelete: Set Null, so when Note is delete, noteid set to null
-  note   Note?   @relation(fields: [noteId], references: [id], onDelete: SetNull)
+  // Made these fields optional to allow for onDelete: Set Null, so when Note is delete, noteid set to null. On Update set to restrict to prevent noteid from being chaned during update.
+  note   Note?   @relation(fields: [noteId], references: [id], onDelete: SetNull, onUpdate: Restrict)
   noteId String?
 }

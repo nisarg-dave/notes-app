@@ -21,3 +21,15 @@ mutation DeleteNoteMutation($id: String!) {
     }
   }
 }
+
+mutation EditNoteMutation($id: String!, $note: EditNoteInput!) {
+  editNote(id: $id, note: $note) {
+    id
+    title
+    body
+    tags {
+      id
+      label
+    }
+  }
+}

@@ -9,6 +9,7 @@ import {
   GetNotesDocument,
   CreateNoteMutationDocument,
   DeleteNoteMutationDocument,
+  EditNoteMutationDocument,
 } from "./graphql/generated";
 
 function App() {
@@ -25,6 +26,9 @@ function App() {
   const [deleteNoteMutation] = useMutation(DeleteNoteMutationDocument, {
     refetchQueries: [GetNotesDocument],
   });
+  const [editNoteMutation] = useMutation(EditNoteMutationDocument, {
+    refetchQueries: [GetNotesDocument],
+  });
 
   useMemo(() => {
     notesArr = data?.notes.map((note) => note)!;
@@ -37,7 +41,6 @@ function App() {
 
   const createNote = ({ title, body, tags }: NoteData): void => {
     // setNotes(() => [...notes, { id: uuidV4(), title, body, tags }]);
-
     createNoteMutation({ variables: { note: { title, body, tags } } });
   };
   const addTag = (tag: Tag): void => {
@@ -45,8 +48,9 @@ function App() {
   };
 
   const updateNote = ({ id, title, body, tags }: Note): void => {
-    const restOfNotes = notes.filter((note) => note.id !== id);
-    setNotes(() => [...restOfNotes, { id, title, body, tags }]);
+    // const restOfNotes = notes.filter((note) => note.id !== id);
+    // setNotes(() => [...restOfNotes, { id, title, body, tags }]);
+    editNoteMutation({ variables: { id, note: { title, body } } });
   };
 
   const deleteNote = (id: string): void => {

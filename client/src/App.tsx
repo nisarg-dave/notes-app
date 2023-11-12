@@ -4,12 +4,15 @@ import { useState, useEffect, useMemo } from "react";
 import { NoteData, Note, Tag } from "./types";
 import NoteList from "./components/NoteList";
 import EditNote from "./components/EditNote";
-import { useQuery, gql, useMutation } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import {
   GetNotesDocument,
   CreateNoteMutationDocument,
   DeleteNoteMutationDocument,
   EditNoteMutationDocument,
+  CreateTagMutationDocument,
+  GetTagsQueryDocument,
+  DeleteTagMutationDocument,
 } from "./graphql/generated";
 
 function App() {
@@ -20,6 +23,12 @@ function App() {
   let tagsArr: Tag[] = [];
 
   const { loading, error, data } = useQuery(GetNotesDocument);
+  const {
+    loading: tagsLoading,
+    error: tagsError,
+    data: tagsData,
+  } = useQuery(GetTagsQueryDocument);
+
   const [createNoteMutation] = useMutation(CreateNoteMutationDocument, {
     refetchQueries: [GetNotesDocument],
   });
@@ -29,22 +38,29 @@ function App() {
   const [editNoteMutation] = useMutation(EditNoteMutationDocument, {
     refetchQueries: [GetNotesDocument],
   });
+  const [createTagMutation] = useMutation(CreateTagMutationDocument);
+  const [deleteTagMutation] = useMutation(DeleteTagMutationDocument, {
+    refetchQueries: [GetTagsQueryDocument, GetNotesDocument],
+  });
 
   useMemo(() => {
     notesArr = data?.notes.map((note) => note)!;
-    notesArr?.forEach((note) => {
-      note.tags.map((tag) => tagsArr.push(tag));
-    })!;
+    // notesArr?.forEach((note) => {
+    //   note.tags.map((tag) => tagsArr.push(tag));
+    // })!;
     setNotes(notesArr!);
-    setTags(tagsArr!);
-  }, [data]);
+    setTags(tagsData?.tags!);
+  }, [data, tagsData]);
 
   const createNote = ({ title, body, tags }: NoteData): void => {
     // setNotes(() => [...notes, { id: uuidV4(), title, body, tags }]);
     createNoteMutation({ variables: { note: { title, body, tags } } });
   };
   const addTag = (tag: Tag): void => {
-    setTags(() => [...tags, tag]);
+    // setTags(() => [...tags, tag]);
+    createTagMutation({
+      variables: { tag: { label: tag.label } },
+    });
   };
 
   const updateNote = ({ id, title, body, tags }: Note): void => {
@@ -76,11 +92,12 @@ function App() {
   };
 
   const deleteTag = (id: string): void => {
-    setTags(tags.filter((tag) => tag.id !== id));
-    // Need to delete tag in notes
-    notes.forEach((note) => {
-      note.tags = note.tags.filter((tag) => tag.id !== id);
-    });
+    // setTags(tags.filter((tag) => tag.id !== id));
+    // // Need to delete tag in notes
+    // notes.forEach((note) => {
+    //   note.tags = note.tags.filter((tag) => tag.id !== id);
+    // });
+    deleteTagMutation({ variables: { id } });
   };
   return (
     <div className="m-4">

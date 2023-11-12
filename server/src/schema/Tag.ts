@@ -56,8 +56,8 @@ const EditTagInput = builder.inputType("EditTagInput", {
 
 // type Mutation {
 //   createTag(tag: NewTagInput!): Tag
-//   editTag(id: Int!, tag: EditTagInput!): Tag
-//   deleteTag(id: Int!): [Tag]
+//   editTag(id: String!, tag: EditTagInput!): Tag
+//   deleteTag(id: String!): [Tag]
 // }
 builder.mutationFields((t) => ({
   createTag: t.prismaField({

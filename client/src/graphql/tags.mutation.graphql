@@ -1,0 +1,13 @@
+mutation CreateTagMutation($tag: NewTagInput!) {
+  createTag(tag: $tag) {
+    id
+    label
+  }
+}
+
+mutation DeleteTagMutation($id: String!) {
+  deleteTag(id: $id) {
+    id
+    label
+  }
+}

@@ -68,7 +68,7 @@ function EditNote({
               // If provided, this will be called with the input value when a new option is created, and onChange will not be called.
               // Label is what we type
               onCreateOption={(label) => {
-                const newTag = { id: uuidV4(), label };
+                const newTag = { id: "", label };
                 onAddTag(newTag);
                 setTags(() => [...tags, newTag]);
               }}

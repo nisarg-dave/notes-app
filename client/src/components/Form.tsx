@@ -2,6 +2,8 @@ import { FormEvent, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import CreatableReactSelect from "react-select/creatable";
 import { NoteData, Tag } from "../types";
+import { useQuery } from "@apollo/client";
+import { GetTagsQueryDocument } from "../graphql/generated";
 
 interface IFormProps {
   onSubmit: (data: NoteData) => void;
@@ -22,8 +24,12 @@ function Form({ onSubmit, onAddTag, availableTags }: IFormProps) {
       body: textAreaRef.current!.value,
       tags: selectedTags,
     });
-
     navigate("..");
+  };
+
+  const getTags = (): Tag[] => {
+    const { loading, error, data } = useQuery(GetTagsQueryDocument);
+    return data?.tags!;
   };
 
   return (
@@ -49,8 +55,10 @@ function Form({ onSubmit, onAddTag, availableTags }: IFormProps) {
             // If provided, this will be called with the input value when a new option is created, and onChange will not be called.
             // Label is what we type
             onCreateOption={(label) => {
-              const newTag = { id: uuidV4(), label };
+              let newTag = { id: "", label };
               onAddTag(newTag);
+              const allTags = getTags();
+              newTag = allTags.find((tag) => tag.label === newTag.label)!;
               setSelectedTags(() => [...selectedTags, newTag]);
             }}
             value={selectedTags.map((tag) => {

@@ -1,4 +1,4 @@
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import CreatableReactSelect from "react-select/creatable";
 import { NoteData, Tag } from "../types";
@@ -8,28 +8,45 @@ import { GetTagsQueryDocument } from "../graphql/generated";
 interface IFormProps {
   onSubmit: (data: NoteData) => void;
   onAddTag: (tag: Tag) => void;
-  availableTags: Tag[];
 }
 
-function Form({ onSubmit, onAddTag, availableTags }: IFormProps) {
+function Form({ onSubmit, onAddTag }: IFormProps) {
   const titleRef = useRef<HTMLInputElement>(null);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+  const [availableTags, setAvailableTags] = useState<Tag[]>([]);
   const navigate = useNavigate();
+
+  const { loading, error, data, refetch } = useQuery(GetTagsQueryDocument);
+
+  useMemo(() => {
+    console.log(data?.tags);
+    setAvailableTags(data?.tags!);
+  }, [data]);
 
   const handleSubmit = (e: FormEvent): void => {
     e.preventDefault();
+    // Replacing ids from  "" to the actual id
+    const newSelectedTags = selectedTags.map((selectedTag) => {
+      if (selectedTag.id === "") {
+        const foundTag = availableTags.find((availableTag) => {
+          if (availableTag.label === selectedTag.label) {
+            return availableTag;
+          }
+        })!;
+        selectedTag.id = foundTag.id;
+        return selectedTag;
+      }
+      return selectedTag;
+    });
+    console.log(newSelectedTags);
+    setSelectedTags(newSelectedTags);
     onSubmit({
       title: titleRef.current!.value,
       body: textAreaRef.current!.value,
       tags: selectedTags,
     });
     navigate("..");
-  };
-
-  const getTags = (): Tag[] => {
-    const { loading, error, data } = useQuery(GetTagsQueryDocument);
-    return data?.tags!;
   };
 
   return (
@@ -57,12 +74,14 @@ function Form({ onSubmit, onAddTag, availableTags }: IFormProps) {
             onCreateOption={(label) => {
               let newTag = { id: "", label };
               onAddTag(newTag);
-              const allTags = getTags();
-              newTag = allTags.find((tag) => tag.label === newTag.label)!;
+              setTimeout(() => {
+                refetch();
+              }, 2000);
               setSelectedTags(() => [...selectedTags, newTag]);
             }}
             value={selectedTags.map((tag) => {
               // CreateReactSelect expects the return to be like this in this format
+              console.log("Values", tag);
               return { label: tag.label, value: tag.id };
             })}
             // Provide the options

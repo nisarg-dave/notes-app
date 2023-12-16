@@ -30,7 +30,7 @@ function App() {
   } = useQuery(GetTagsQueryDocument);
 
   const [createNoteMutation] = useMutation(CreateNoteMutationDocument, {
-    refetchQueries: [GetNotesDocument],
+    refetchQueries: [GetNotesDocument, GetTagsQueryDocument],
   });
   const [deleteNoteMutation] = useMutation(DeleteNoteMutationDocument, {
     refetchQueries: [GetNotesDocument],
@@ -115,13 +115,7 @@ function App() {
         />
         <Route
           path="/new"
-          element={
-            <NewNote
-              onSubmit={createNote}
-              onAddTag={addTag}
-              availableTags={tags}
-            />
-          }
+          element={<NewNote onSubmit={createNote} onAddTag={addTag} />}
         />
         <Route path="/:id">
           <Route

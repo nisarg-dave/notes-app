@@ -13,6 +13,7 @@ import {
   CreateTagMutationDocument,
   GetTagsQueryDocument,
   DeleteTagMutationDocument,
+  EditTagMutationDocument,
 } from "./graphql/generated";
 
 function App() {
@@ -40,6 +41,9 @@ function App() {
   });
   const [createTagMutation] = useMutation(CreateTagMutationDocument);
   const [deleteTagMutation] = useMutation(DeleteTagMutationDocument, {
+    refetchQueries: [GetTagsQueryDocument, GetNotesDocument],
+  });
+  const [editTagMutation] = useMutation(EditTagMutationDocument, {
     refetchQueries: [GetTagsQueryDocument, GetNotesDocument],
   });
 
@@ -75,20 +79,21 @@ function App() {
   };
 
   const updateTag = (id: string, label: string): void => {
-    // Find the index
-    const indexOfTag = tags.findIndex((tag) => tag.id === id);
-    // Create a new array of the tags so that we don't mutate state directly
-    const allTags = [...tags];
-    // Replace the tag
-    allTags[indexOfTag] = { id, label };
-    setTags(allTags);
-    // Need to update the same tag in the notes
-    notes.forEach((note) => {
-      const indexOfTagInNote = note.tags.findIndex((tag) => tag.id === id);
-      const tagsInNote = [...note.tags];
-      tagsInNote[indexOfTagInNote] = { id, label };
-      note.tags = tagsInNote;
-    });
+    // // Find the index
+    // const indexOfTag = tags.findIndex((tag) => tag.id === id);
+    // // Create a new array of the tags so that we don't mutate state directly
+    // const allTags = [...tags];
+    // // Replace the tag
+    // allTags[indexOfTag] = { id, label };
+    // setTags(allTags);
+    // // Need to update the same tag in the notes
+    // notes.forEach((note) => {
+    //   const indexOfTagInNote = note.tags.findIndex((tag) => tag.id === id);
+    //   const tagsInNote = [...note.tags];
+    //   tagsInNote[indexOfTagInNote] = { id, label };
+    //   note.tags = tagsInNote;
+    // });
+    editTagMutation({ variables: { id, tag: { label } } });
   };
 
   const deleteTag = (id: string): void => {

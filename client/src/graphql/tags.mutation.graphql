@@ -11,3 +11,10 @@ mutation DeleteTagMutation($id: String!) {
     label
   }
 }
+
+mutation EditTagMutation($id: String!, $tag: EditTagInput!) {
+  editTag(id: $id, tag: $tag) {
+    id
+    label
+  }
+}

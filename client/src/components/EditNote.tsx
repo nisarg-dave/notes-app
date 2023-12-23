@@ -1,13 +1,12 @@
 import { Note, Tag } from "../types";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import CreatableReactSelect from "react-select/creatable";
+import ReactSelect from "react-select";
 import { FormEvent, useState } from "react";
 
 interface IEditNoteProps {
   notes: Note[];
   onSubmit: (data: Note) => void;
   onDelete: (id: string) => void;
-  onAddTag: (tag: Tag) => void;
   availableTags: Tag[];
 }
 
@@ -15,7 +14,6 @@ function EditNote({
   notes,
   onSubmit,
   onDelete,
-  onAddTag,
   availableTags,
 }: IEditNoteProps) {
   const paramObject = useParams();
@@ -64,14 +62,7 @@ function EditNote({
             <label className="block text-gray-700 text-sm font-bold mb-2">
               Tags
             </label>
-            <CreatableReactSelect
-              // If provided, this will be called with the input value when a new option is created, and onChange will not be called.
-              // Label is what we type
-              onCreateOption={(label) => {
-                const newTag = { id: "", label };
-                onAddTag(newTag);
-                setTags(() => [...tags, newTag]);
-              }}
+            <ReactSelect
               value={tags.map((tag) => {
                 // CreateReactSelect expects the return to be like this in this format
                 return { label: tag.label, value: tag.id };

@@ -130,7 +130,6 @@ function App() {
                 notes={notes}
                 onSubmit={updateNote}
                 onDelete={deleteNote}
-                onAddTag={addTag}
                 availableTags={tags}
               />
             }

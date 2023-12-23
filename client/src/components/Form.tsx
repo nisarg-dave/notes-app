@@ -20,7 +20,6 @@ function Form({ onSubmit, onAddTag }: IFormProps) {
   const { loading, error, data, refetch } = useQuery(GetTagsQueryDocument);
 
   useMemo(() => {
-    console.log(data?.tags);
     setAvailableTags(data?.tags!);
   }, [data]);
 
@@ -39,7 +38,6 @@ function Form({ onSubmit, onAddTag }: IFormProps) {
       }
       return selectedTag;
     });
-    console.log(newSelectedTags);
     setSelectedTags(newSelectedTags);
     onSubmit({
       title: titleRef.current!.value,
@@ -81,7 +79,6 @@ function Form({ onSubmit, onAddTag }: IFormProps) {
             }}
             value={selectedTags.map((tag) => {
               // CreateReactSelect expects the return to be like this in this format
-              console.log("Values", tag);
               return { label: tag.label, value: tag.id };
             })}
             // Provide the options

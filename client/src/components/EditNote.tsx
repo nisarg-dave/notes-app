@@ -5,7 +5,7 @@ import { FormEvent, useState } from "react";
 
 interface IEditNoteProps {
   notes: Note[];
-  onSubmit: (data: Note) => void;
+  onSubmit: (data: Omit<Note, "tags">) => void;
   onDelete: (id: string) => void;
   availableTags: Tag[];
 }
@@ -31,7 +31,7 @@ function EditNote({
 
   const handleSave = (e: FormEvent) => {
     e.preventDefault();
-    onSubmit({ id, title, body, tags });
+    onSubmit({ id, title, body });
     navigate("../..");
   };
 

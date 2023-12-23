@@ -17,7 +17,7 @@ function Form({ onSubmit, onAddTag }: IFormProps) {
   const [availableTags, setAvailableTags] = useState<Tag[]>([]);
   const navigate = useNavigate();
 
-  const { loading, error, data, refetch } = useQuery(GetTagsQueryDocument);
+  const { data, refetch } = useQuery(GetTagsQueryDocument);
 
   useMemo(() => {
     setAvailableTags(data?.tags!);

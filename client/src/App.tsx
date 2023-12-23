@@ -1,6 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import NewNote from "./components/NewNote";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { NoteData, Note, Tag } from "./types";
 import NoteList from "./components/NoteList";
 import EditNote from "./components/EditNote";
@@ -21,14 +21,9 @@ function App() {
   const [tags, setTags] = useState<Tag[]>([]);
 
   let notesArr: Note[];
-  let tagsArr: Tag[] = [];
 
-  const { loading, error, data } = useQuery(GetNotesDocument);
-  const {
-    loading: tagsLoading,
-    error: tagsError,
-    data: tagsData,
-  } = useQuery(GetTagsQueryDocument);
+  const { data } = useQuery(GetNotesDocument);
+  const { data: tagsData } = useQuery(GetTagsQueryDocument);
 
   const [createNoteMutation] = useMutation(CreateNoteMutationDocument, {
     refetchQueries: [GetNotesDocument, GetTagsQueryDocument],
@@ -67,7 +62,7 @@ function App() {
     });
   };
 
-  const updateNote = ({ id, title, body, tags }: Note): void => {
+  const updateNote = ({ id, title, body }: Omit<Note, "tags">): void => {
     // const restOfNotes = notes.filter((note) => note.id !== id);
     // setNotes(() => [...restOfNotes, { id, title, body, tags }]);
     editNoteMutation({ variables: { id, note: { title, body } } });
